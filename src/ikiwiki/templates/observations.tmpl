@@ -1,0 +1,16 @@
+<!-- -*- HTML -*- -->
+<div class="observation_container box">
+  <div class="observation_header">
+    <form method="get" action="<TMPL_VAR upload_action>" class="soundfiles_buttons">
+      <div>
+        <input type="hidden" name="do" value="<TMPL_VAR upload_do>" />
+        <input type="submit" value="Upload observation" />
+      </div>
+    </form>
+    <h2>Recordings</h2>
+  </div>
+
+  <div id="fg_soundfiles" class="soundfile_list"></div>
+  <div id="bg_soundfiles" class="soundfile_list"></div>
+  <div id="user_soundfiles" class="soundfile_list"></div>
+</div>

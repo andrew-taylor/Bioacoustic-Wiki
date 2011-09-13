@@ -1,0 +1,32 @@
+<!-- -*- HTML -*- -->
+<div class="googlemap_container">
+  <TMPL_IF have_googlemap_actions>
+    <div class="googlemap_actions">
+      <div class="align-left actions">
+        <ul>
+          <li>
+            <a href="#" id="googlemap_edit_regions_button">Edit the range map</a>
+          </li>
+        </ul>
+      </div>
+      <TMPL_IF kml_url>
+        <div class="actions">
+          <ul>
+            <li>
+              <a href="http://maps.google.com/maps?q=<TMPL_VAR kml_url>">Show the range map at Google Maps</a>
+            </li>
+            <li>
+              <a href="<TMPL_VAR KML_URL>">Download the range map in KML (for Google Earth)</a>
+            </li>
+            <TMPL_IF historyurl>
+              <li>
+                <a href="<TMPL_VAR historyurl>">History</a>
+              </li>
+            </TMPL_IF>
+          </ul>
+        </div>
+      </TMPL_IF>
+    </div>
+  </TMPL_IF>
+  <div class="googlemap box" id="<TMPL_VAR googlemaps_id>">Loading...</div>
+</div>

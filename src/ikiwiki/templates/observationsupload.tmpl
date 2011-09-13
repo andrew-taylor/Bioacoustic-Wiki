@@ -1,0 +1,293 @@
+<!-- -*- HTML -*- -->
+<!-- No need for these things to be in the form -->
+
+<div class="googlemap_container">
+
+  <div class="googlemap_header box"><h2>Location</h2></div>
+  <div class="googlemap" id="map_canvas"></div>
+  <div class="googlemap_instructions box">Click anywhere to set the
+    location for this collection of recordings, or type a location
+    into the geocoding box. Latitudes and longitudes can be specified
+    as e.g. '25.300683S 130.997233E'.</div>
+
+  <!-- Geocoding needs its own form to handle the enter event -->
+  <div class="googlemap_footer footer">
+    <form id="geocode_form" action="#">
+      <div class="locationBox">
+        <div class="locationWidgets">
+          <table class="locationField">
+            <tr>
+              <td><label for="geocode_location">Location:</label></td>
+              <td class="locationWidget"><input type="text" id="geocode_location" /></td>
+              <td><input type="submit" id="geocode_location_button" value="Go" class="" /></td>
+              <td><input type="button" id="geocode_reset_button" value="Reset" class="" /></td>
+              <td><label>Latitude:</label></td><td class="latlngfield" id="geocode_latitude"></td>
+              <td><label>Longitude:</label></td><td class="latlngfield" id="geocode_longitude"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<TMPL_VAR FORM-START>
+<div class="soundfile">
+
+<!-- hidden fields -->
+<TMPL_VAR FIELD-DO>
+<TMPL_VAR FIELD-SID>
+<TMPL_VAR FIELD-METADATA>
+<TMPL_VAR FIELD-RCSINFO>
+<TMPL_VAR FIELD-PAGE>
+
+<TMPL_VAR FIELD-LATITUDE>
+<TMPL_VAR FIELD-LONGITUDE>
+<TMPL_VAR FIELD-LOCATION>
+
+<TMPL_VAR FIELD-METADATA_FILENAME>
+
+  <!-- species -->
+  <div class="uploadbox box">
+    <div class="field">
+      <div class="fieldLabel">
+        <label for="ac_species">Species:</label>
+      </div>
+      <div class="fieldWidget">
+        <input id="ac_species" type="text" />
+        <TMPL_VAR FIELD-SPECIES>
+          <div id="autocomplete_container"></div>
+      </div>
+    </div>
+    <div class="clear-both"></div>
+  </div>
+  
+<!-- Date entry using the YUI Calendar widget -->
+<div class="uploadbox box">
+  <div class="field">
+    <div class="fieldLabel">
+      <label for="date"><TMPL_VAR label-date></label>
+    </div>
+    <div class="fieldWidget">
+      <div class="datefield">
+        <TMPL_VAR field-date>
+        <button type="button" id="showCalendar" title="Show
+                 Calendar"><img src="wikiicons/calbtn.gif" width="18"
+                 height="18" alt="Calendar" /></button>
+      </div>
+    </div>
+    <div class="error"><TMPL_VAR error-date></div>
+    <div class="clear-both"></div>
+  </div>
+  <div class="field">
+    <div class="fieldLabel">
+      <label for="time"><TMPL_VAR label-time></label>
+    </div>
+    <div class="fieldWidget">
+      <div class="timefield">
+        <TMPL_VAR field-time>
+      </div>
+    </div>
+    <div class="error"><TMPL_VAR error-time></div>
+    <div class="clear-both"></div>
+  </div>
+</div>
+
+<div class="uploadbox box">
+  <div class="field">
+    <div class="fieldLabel">
+      <label for="notes"><TMPL_VAR label-notes></label>
+    </div>
+    <div class="fieldWidget">
+      <TMPL_VAR field-notes>
+    </div>
+    <div class="clear-both"></div>
+  </div>
+</div>
+
+<div class="right-column">
+
+  <!-- foreground species -->
+  <div class="uploadbox box">
+    <div class="field">
+      <div class="fieldLabel">
+        <label>Other foreground species:</label>
+      </div>
+      <div class="soundfiles_list">
+        <ul id="fg_species_autocomplete_selected">
+<TMPL_LOOP NAME="FG_SPECIES">
+  <li id="fg_species_autocomplete_selected_<TMPL_VAR NAME="GENUS"> <TMPL_VAR NAME="SPECIES">"></li>
+</TMPL_LOOP>
+        </ul>
+      </div>
+    </div>
+    <div class="field">
+      <div class="fieldLabel">
+        <label for="fg_ac_species">Add:</label>
+      </div>
+      <div class="fieldWidget">
+        <input id="fg_ac_species" type="text" />
+        <TMPL_VAR FIELD-FG_SPECIES>
+          <div id="fg_autocomplete_container"></div>
+      </div>
+    </div>
+    <div class="clear-both"></div>
+  </div>
+
+  <!-- background species -->
+  <div class="uploadbox box">
+    <div class="field">
+      <div class="fieldLabel">
+        <label>Background species:</label>
+      </div>
+      <div class="soundfiles_list">
+        <ul id="bg_species_autocomplete_selected">
+<TMPL_LOOP NAME="BG_SPECIES">
+  <li id="bg_species_autocomplete_selected_<TMPL_VAR NAME="GENUS"> <TMPL_VAR NAME="SPECIES">"></li>
+</TMPL_LOOP>
+        </ul>
+      </div>
+    </div>
+    <div class="field">
+      <div class="fieldLabel">
+        <label for="bg_ac_species">Add:</label>
+      </div>
+      <div class="fieldWidget">
+        <input id="bg_ac_species" type="text" />
+        <TMPL_VAR FIELD-BG_SPECIES>
+          <div id="bg_autocomplete_container"></div>
+      </div>
+    </div>
+    <div class="clear-both"></div>
+  </div>
+
+</div>
+
+<!-- ---------------------------------------- -->
+
+<div class="left-column">
+
+<TMPL_IF name="PLAYSOUNDFILE">
+  <div class="uploadbox box play_soundfile">
+    <div class="field">
+      <a href="<TMPL_VAR PLAYSOUNDFILE>">Play the soundfile</a>
+      <TMPL_IF name="mp3">
+        <a href="<TMPL_VAR mp3>"></a>
+      </TMPL_IF>
+    </div>
+</div>
+</TMPL_IF>
+
+<div class="uploadbox box">
+  <div class="field">
+    <div class="fieldLabel">
+      <label for="recordist"><TMPL_VAR label-recordist></label>
+    </div>
+    <div class="fieldWidget">
+      <TMPL_VAR field-recordist>
+    </div>
+    <div class="clear-both"></div>
+  </div>
+</div>
+
+<div class="uploadbox box">
+  <div class="field">
+    <div class="fieldLabel">
+      <label for="recordingquality"><TMPL_VAR label-recordingquality></label>
+    </div>
+    <div class="fieldWidget">
+      <TMPL_VAR field-recordingquality>
+    </div>
+    <div class="clear-both"></div>
+  </div>
+</div>
+
+<div class="uploadbox box">
+  <div class="field">
+    <div class="fieldLabel">
+      <label for="recording_notes"><TMPL_VAR label-recording_notes></label>
+    </div>
+    <div class="fieldWidget">
+      <TMPL_VAR field-recording_notes>
+    </div>
+    <div class="clear-both"></div>
+  </div>
+</div>
+
+<TMPL_IF name="FIELD-SOUNDFILE">
+  <div class="uploadbox box mandatory">
+    <div class="field">
+      <div class="fieldLabel">
+        <label>Soundfiles to upload (5Mb limit):</label>
+      </div>
+      <div class="soundfiles_list">
+        <ul id="files_list"></ul>
+      </div>
+    </div>
+    <div class="field">
+      <div class="fieldLabel">
+        <label for="soundfile"><TMPL_VAR label-soundfile></label>
+      </div>
+      <div class="fieldWidget">
+        <div class="soundfiles_upload_widget">
+          <input id="soundfile" type="file" />
+          <!-- <TMPL_VAR FIELD-SOUNDFILE> -->
+        </div>
+      </div>
+    </div>
+    <div class="error"><TMPL_VAR ERROR-SOUNDFILE></div>
+    <div class="clear-both"></div>
+  </div>
+</TMPL_IF>
+
+</div>
+
+<!-- ---------------------------------------- -->
+
+<!-- FIXME submit button -->
+<div class="clear-both"></div>
+
+<div class="uploadbox box mandatory">
+  <div class="field">
+    <div class="centredWidget">
+      <TMPL_VAR field-setdefaults>
+    </div>
+  </div>
+  <div class="field">
+    <div class="centredWidget submitWidget">
+      <TMPL_VAR form-submit>
+    </div>
+  </div>
+  <div class="clear-both"></div>
+</div>
+
+</div>
+<TMPL_VAR FORM-END>
+
+<!-- The YUI loader is not too friendly about CSS: e.g. it contains a
+rule (not in these CSS files) that changes the margin on the body
+tag. Do it the old-fashioned way. -->
+
+<script type="text/javascript" src="http://yui.yahooapis.com/combo?2.8.1/build/yahoo-dom-event/yahoo-dom-event.js&amp;2.8.1/build/animation/animation-min.js&amp;2.8.1/build/datasource/datasource-min.js&amp;2.8.1/build/autocomplete/autocomplete-min.js&amp;2.8.1/build/element/element-min.js&amp;2.8.1/build/button/button-min.js&amp;2.8.1/build/calendar/calendar-min.js&amp;2.8.1/build/dragdrop/dragdrop-min.js&amp;2.8.1/build/container/container-min.js"></script>
+<script type="text/javascript" src="taxonomy_description_data.js"></script>
+
+<TMPL_VAR JAVASCRIPT>
+<!--observationsupload.tmpl-->
+<script type="text/javascript">var one_bit_url = "1bit.swf";</script>
+<script type="text/javascript" src="1bit.js"></script>
+
+<TMPL_VAR js-head>
+<script type="text/javascript">
+var recording_latlngs = new Array();
+<TMPL_IF NAME="FOREGROUND_MARKERS">
+<TMPL_LOOP NAME="FOREGROUND_MARKERS">
+  <TMPL_VAR NAME="JAVASCRIPT">
+</TMPL_LOOP>
+</TMPL_IF>
+<TMPL_IF NAME="BACKGROUND_MARKERS">
+<TMPL_LOOP NAME="BACKGROUND_MARKERS">
+  <TMPL_VAR NAME="JAVASCRIPT">
+</TMPL_LOOP>
+</TMPL_IF>
+</script>
